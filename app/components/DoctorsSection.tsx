@@ -1,13 +1,11 @@
 'use client';
-
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { GraduationCap, Award, Languages, Calendar } from 'lucide-react';
-import { doctors } from '../lib/data';
 
-export default function DoctorsSection() {
+export default function DoctorsSection({ doctors }: { doctors: any[] }) {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -41,7 +39,7 @@ export default function DoctorsSection() {
 
         {/* Doctors Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {doctors.map((doctor, index) => (
+          {doctors.map((doctor: any, index: number) => (
             <motion.div
               key={doctor.id}
               initial={{ opacity: 0, y: 30 }}
@@ -54,8 +52,8 @@ export default function DoctorsSection() {
                   {/* Image */}
                   <div className="relative h-80 overflow-hidden">
                     <Image
-                      src={doctor.image}
-                      alt={doctor.name}
+                      src={doctor?.image}
+                      alt={doctor?.name}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
                     />

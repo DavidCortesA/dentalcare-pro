@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Award, HeartHandshake, Stethoscope, Shield } from 'lucide-react';
 
-import { aboutPage } from '../lib/data';
+import { aboutPage } from '../lib/static-content';
 
 export default function NosotrosPage() {
   const highlights = [

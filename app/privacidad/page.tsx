@@ -1,7 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-import { privacyPolicyMarkdown } from '../lib/data';
+import { privacyPolicyMarkdown } from '../lib/static-content';
 
 export default function PrivacidadPage() {
   return (

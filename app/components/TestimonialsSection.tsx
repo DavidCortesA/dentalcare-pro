@@ -4,9 +4,8 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Image from 'next/image';
 import { Star, Quote } from 'lucide-react';
-import { testimonials } from '../lib/data';
 
-export default function TestimonialsSection() {
+export default function TestimonialsSection({ testimonials }: { testimonials: any[] }) {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,

@@ -5,9 +5,8 @@ import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Calendar, Clock, User } from 'lucide-react';
-import { blogPosts } from '../lib/data';
 
-export default function BlogSection() {
+export default function BlogSection({ blogPosts }: { blogPosts: any[] }) {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,

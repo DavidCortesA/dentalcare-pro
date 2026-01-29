@@ -5,7 +5,6 @@ import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Sparkles, Smile, Activity, Star, Shield } from 'lucide-react';
-import { services } from '../lib/data';
 
 const iconMap: { [key: string]: any } = {
   Sparkles,
@@ -15,7 +14,7 @@ const iconMap: { [key: string]: any } = {
   Shield,
 };
 
-export default function ServicesSection() {
+export default function ServicesSection({ services }: { services: any[] }) {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -64,8 +63,8 @@ export default function ServicesSection() {
                     {/* Image */}
                     <div className="relative h-56 overflow-hidden">
                       <Image
-                        src={service.image}
-                        alt={service.title}
+                        src={service?.image || "/images/DentalCarePro.png"}
+                        alt={service?.title || "Testimonial"}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
                       />

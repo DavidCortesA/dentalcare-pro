@@ -3,10 +3,9 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { testimonials } from '../lib/data';
 import { Calendar, Phone, Award, Users, Clock, Shield } from 'lucide-react';
 
-export default function Hero() {
+export default function Hero({ testimonials }: { testimonials: any[] }) {
   const stats = [
     { icon: Users, value: '10,000+', label: 'Pacientes Felices' },
     { icon: Award, value: '15+', label: 'Años de Experiencia' },
@@ -133,14 +132,14 @@ export default function Hero() {
             >
               <div className="flex items-center space-x-2">
                 <div className="flex -space-x-2">
-                  {testimonials.map((testimonial, index) => (
+                  {testimonials?.map((testimonial, index) => (
                     <div
                       key={index}
                       className="w-10 h-10 rounded-full border-2 border-white bg-gray-300"
                     >
                       <Image
-                        src={testimonial.image}
-                        alt={testimonial.name}
+                        src={testimonial?.image || "/avatar-default.png"}
+                        alt={testimonial?.name || 'Testimonial'}
                         width={40}
                         height={40}
                         className="object-cover rounded-full"
