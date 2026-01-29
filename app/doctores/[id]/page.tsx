@@ -1,160 +1,243 @@
+'use client';
+
+import { useDoctor } from '@/app/lib/hooks/useStrapi';
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { Calendar, GraduationCap, Languages, Award, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
+  ArrowLeft,
+  Calendar,
+  GraduationCap,
+  Award,
+  Languages,
+  Clock,
+  MapPin,
+} from 'lucide-react';
+import { use } from 'react';
 
-import { doctors } from '../../lib/data';
+export default function DoctorPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = use(params)
+  const { doctor, isLoading, error } = useDoctor(slug);
 
-export function generateStaticParams() {
-  return doctors.map((d) => ({ id: String(d.id) }));
-}
+  // Loading State
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Cargando información del doctor...</p>
+        </div>
+      </div>
+    );
+  }
 
-export default function DoctorDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const { id } = params;
-  const doctorId = Number(id);
-  const doctor = doctors.find((d) => d.id === doctorId);
+  // Error State
+  if (error || !doctor) {
+    return (
+      <div className="min-h-screen pt-20 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="text-red-500 text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Doctor no encontrado
+          </h2>
+          <p className="text-gray-600 mb-6">
+            El doctor que buscas no existe o fue eliminado.
+          </p>
+          <Link
+            href="/doctores"
+            className="inline-flex items-center space-x-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            <ArrowLeft size={20} />
+            <span>Volver a Doctores</span>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
-  if (!doctor) notFound();
+  console.log(doctor);
+  console.log(isLoading);
+  console.log(error);
+
+  // Get attributes from Strapi format
+  const attributes = doctor?.attributes || doctor;
+  const name = attributes.name || '';
+  const specialty = attributes.specialty || '';
+  const bio = attributes.bio || '';
+  const experience = attributes.experience || '';
+  const credentials = attributes.credentials || [];
+  const languages = attributes.languages || [];
+  const schedule = attributes.schedule || {};
+  const imageUrl = process.env.NEXT_PUBLIC_STRAPI_URL + attributes?.image?.url || '';
 
   return (
-    <div className="pt-20">
-      {/* Header */}
-      <section className="bg-linear-to-br from-blue-50 via-white to-green-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-          <div className="flex flex-col lg:flex-row gap-10 items-start">
-            <div className="relative w-full lg:w-[420px]">
-              <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl">
-                <Image
-                  src={doctor.image}
-                  alt={doctor.name}
-                  fill
-                  className="object-cover"
-                  priority
-                />
+    <div className="min-h-screen pt-20 bg-white">
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-blue-50 to-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Link
+            href="/doctores"
+            className="inline-flex items-center space-x-2 text-gray-600 hover:text-primary-600 mb-8 transition-colors"
+          >
+            <ArrowLeft size={20} />
+            <span>Volver a Doctores</span>
+          </Link>
+
+          <div className="grid lg:grid-cols-3 gap-12">
+            {/* Doctor Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="lg:col-span-1"
+            >
+              <div className="relative aspect-square rounded-2xl overflow-hidden shadow-2xl">
+                {/* {imageUrl && (
+                  <Image
+                    src={imageUrl}
+                    alt={name}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                )} */}
               </div>
-            </div>
-
-            <div className="flex-1">
-              <nav className="text-sm text-gray-600">
-                <Link href="/" className="hover:text-primary-700">
-                  Inicio
-                </Link>
-                <span className="mx-2">/</span>
-                <Link href="/doctores" className="hover:text-primary-700">
-                  Doctores
-                </Link>
-              </nav>
-
-              <h1 className="mt-4 text-4xl sm:text-5xl font-display font-bold text-gray-900">
-                {doctor.name}
-              </h1>
-              <p className="mt-2 text-lg text-primary-700 font-semibold">{doctor.specialty}</p>
-
-              <p className="mt-6 text-gray-700 leading-relaxed">{doctor.bio}</p>
-
-              <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/agendar"
-                  className="flex items-center justify-center space-x-2 px-8 py-4 bg-linear-to-r from-primary-600 to-dental-mint text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1"
-                >
-                  <Calendar size={22} />
-                  <span>Agendar con este doctor</span>
-                </Link>
-                <Link
-                  href="/doctores"
-                  className="flex items-center justify-center space-x-2 px-8 py-4 bg-white border-2 border-primary-600 text-primary-700 rounded-xl font-bold text-lg hover:bg-primary-50 transition-all"
-                >
-                  <span>Ver todos</span>
-                </Link>
+              
+              {/* Experience Badge */}
+              <div className="mt-6 p-6 bg-gradient-to-br from-primary-600 to-dental-mint rounded-xl text-white text-center">
+                <Award className="mx-auto mb-2" size={32} />
+                <div className="text-3xl font-bold">{experience}</div>
+                <div className="text-primary-100">de experiencia</div>
               </div>
+            </motion.div>
+
+            {/* Doctor Info */}
+            <div className="lg:col-span-2">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <h1 className="text-4xl sm:text-5xl font-display font-bold text-gray-900 mb-4">
+                  {name}
+                </h1>
+                <p className="text-2xl text-primary-600 font-semibold mb-8">
+                  {specialty}
+                </p>
+
+                <div className="prose prose-lg max-w-none mb-8">
+                  <p className="text-gray-700 leading-relaxed">{bio}</p>
+                </div>
+
+                {/* Quick Info */}
+                <div className="grid sm:grid-cols-2 gap-4 mb-8">
+                  {/* Languages */}
+                  {languages.length > 0 && (
+                    <div className="flex items-start space-x-3 p-4 bg-gray-50 rounded-lg">
+                      <Languages className="text-primary-600 flex-shrink-0 mt-1" size={24} />
+                      <div>
+                        <div className="font-semibold text-gray-900 mb-1">Idiomas</div>
+                        <div className="text-gray-600">{languages.join(', ')}</div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Location */}
+                  <div className="flex items-start space-x-3 p-4 bg-gray-50 rounded-lg">
+                    <MapPin className="text-primary-600 flex-shrink-0 mt-1" size={24} />
+                    <div>
+                      <div className="font-semibold text-gray-900 mb-1">Ubicación</div>
+                      <div className="text-gray-600">Monterrey, N.L.</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link
+                    href="/agendar"
+                    className="flex items-center justify-center space-x-2 px-8 py-4 bg-gradient-to-r from-primary-600 to-dental-mint text-white rounded-xl font-bold text-lg hover:shadow-xl transition-all"
+                  >
+                    <Calendar size={22} />
+                    <span>Agendar Cita con {name.split(' ')[1] || name}</span>
+                  </Link>
+                </div>
+              </motion.div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Details */}
-      <section className="py-16 bg-linear-to-br from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-8">
-              <div className="bg-white rounded-2xl shadow-lg p-8">
-                <h2 className="text-2xl font-display font-bold text-gray-900 mb-6">
-                  Credenciales y formación
-                </h2>
-                <ul className="space-y-3">
-                  {doctor.credentials.map((c) => (
-                    <li key={c} className="flex items-start text-gray-700">
-                      <Award className="mt-0.5 mr-3 text-primary-600" size={18} />
-                      <span>{c}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="bg-white rounded-2xl shadow-lg p-8">
-                <h2 className="text-2xl font-display font-bold text-gray-900 mb-6">
-                  Idiomas y experiencia
-                </h2>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="flex items-center p-4 rounded-xl bg-primary-50 border border-primary-100">
-                    <GraduationCap className="text-primary-700 mr-3" size={20} />
-                    <div>
-                      <div className="text-sm text-gray-600">Experiencia</div>
-                      <div className="font-bold text-gray-900">{doctor.experience}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center p-4 rounded-xl bg-primary-50 border border-primary-100">
-                    <Languages className="text-primary-700 mr-3" size={20} />
-                    <div>
-                      <div className="text-sm text-gray-600">Idiomas</div>
-                      <div className="font-bold text-gray-900">
-                        {doctor.languages.join(', ')}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      {/* Credentials Section */}
+      {credentials.length > 0 && (
+        <section className="py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-display font-bold text-gray-900 mb-8">
+              Formación y Certificaciones
+            </h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              {credentials.map((credential: string, index: number) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-start space-x-3 p-6 bg-white rounded-xl border border-gray-200"
+                >
+                  <GraduationCap className="text-primary-600 flex-shrink-0 mt-1" size={24} />
+                  <p className="text-gray-700">{credential}</p>
+                </motion.div>
+              ))}
             </div>
-
-            <aside className="space-y-8">
-              <div className="bg-white rounded-2xl shadow-lg p-8">
-                <h2 className="text-2xl font-display font-bold text-gray-900 mb-6">
-                  Horario de atención
-                </h2>
-                <div className="space-y-3">
-                  {Object.entries(doctor.schedule).map(([day, hours]) => (
-                    <div
-                      key={day}
-                      className="flex items-start justify-between gap-4 p-3 rounded-xl bg-gray-50"
-                    >
-                      <div className="font-semibold text-gray-900">{day}</div>
-                      <div className="flex items-center text-gray-700">
-                        <Clock size={16} className="mr-2 text-primary-600" />
-                        <span>{hours}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6">
-                  <Link
-                    href="/agendar"
-                    className="w-full flex items-center justify-center space-x-2 px-6 py-4 bg-linear-to-r from-primary-600 to-dental-mint text-white rounded-xl font-bold text-lg hover:shadow-xl transition-all"
-                  >
-                    <Calendar size={20} />
-                    <span>Agendar cita</span>
-                  </Link>
-                </div>
-              </div>
-            </aside>
           </div>
+        </section>
+      )}
+
+      {/* Schedule Section */}
+      {Object.keys(schedule).length > 0 && (
+        <section className="py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-display font-bold text-gray-900 mb-8">
+              Horario de Atención
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Object.entries(schedule).map(([day, hours], index) => (
+                <motion.div
+                  key={day}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-center justify-between p-6 bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-200"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Clock className="text-primary-600" size={20} />
+                    <span className="font-semibold text-gray-900">{day}</span>
+                  </div>
+                  <span className="text-gray-600">{hours}</span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* CTA Section */}
+      <section className="bg-gradient-to-br from-primary-600 to-dental-mint py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+          <h2 className="text-3xl font-display font-bold mb-4">
+            ¿Listo para tu consulta?
+          </h2>
+          <p className="text-xl text-primary-100 mb-8">
+            Agenda tu cita con {name.split(' ')[0]} y comienza tu camino hacia una sonrisa saludable
+          </p>
+          <Link
+            href="/agendar"
+            className="inline-block px-8 py-4 bg-white text-primary-700 rounded-xl font-bold text-lg hover:shadow-xl transition-all"
+          >
+            Agendar Cita Ahora
+          </Link>
         </div>
       </section>
     </div>
   );
 }
-

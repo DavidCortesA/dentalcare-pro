@@ -63,7 +63,7 @@ export default function ServicesSection({ services }: { services: any[] }) {
                     {/* Image */}
                     <div className="relative h-56 overflow-hidden">
                       <Image
-                        src={service?.image || "/images/DentalCarePro.png"}
+                        src={`${process.env.NEXT_PUBLIC_STRAPI_URL as string}${service?.image.url}` || "/images/DentalCarePro.png"}
                         alt={service?.title || "Testimonial"}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"

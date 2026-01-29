@@ -5,13 +5,19 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Calendar, Phone, GraduationCap, Languages } from 'lucide-react';
-import { doctors } from '../lib/data';
+import { useDoctors } from '../lib/hooks/useStrapi';
+import NotFound from '../not-found';
+import LoadingPage from '../components/LoadingPage';
 
 export default function DoctoresPage() {
+  const { doctors, error, isLoading } = useDoctors();
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.12,
   });
+
+  if (isLoading) (<LoadingPage />);
+  if (error || !doctors) NotFound();
 
   return (
     <div className="pt-20">
@@ -41,7 +47,7 @@ export default function DoctoresPage() {
             >
               <span className="text-sm font-semibold text-primary-700">Nuestro Equipo</span>
               <span className="text-sm text-gray-500">•</span>
-              <span className="text-sm text-gray-700">{doctors.length} especialistas</span>
+              <span className="text-sm text-gray-700">{doctors?.length} especialistas</span>
             </motion.div>
 
             <motion.h1
@@ -111,7 +117,7 @@ export default function DoctoresPage() {
           </motion.div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {doctors.map((doctor, index) => (
+            {doctors?.map((doctor: any, index: number) => (
               <motion.div
                 key={doctor.id}
                 initial={{ opacity: 0, y: 26 }}
@@ -119,12 +125,12 @@ export default function DoctoresPage() {
                 transition={{ duration: 0.6, delay: index * 0.08 }}
                 className="group"
               >
-                <Link href={`/doctores/${doctor.id}`}>
+                <Link href={`/doctores/${doctor.slug}`}>
                   <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                     {/* Image */}
                     <div className="relative h-80 overflow-hidden">
                       <Image
-                        src={doctor.image}
+                        src={`${process.env.NEXT_PUBLIC_STRAPI_URL as string}${doctor?.image?.url}`}
                         alt={doctor.name}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"

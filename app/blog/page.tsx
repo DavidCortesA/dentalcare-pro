@@ -6,10 +6,16 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { ArrowRight, Calendar, Clock, User } from 'lucide-react';
 
-import { blogPosts } from '../lib/data';
+import { useBlogPosts } from '../lib/hooks/useStrapi';
+import LoadingPage from '../components/LoadingPage';
+import NotFound from '../not-found';
 
 export default function BlogPage() {
+  const { posts, isLoading, error } = useBlogPosts(3);
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.12 });
+  
+  if (isLoading) return <LoadingPage />;
+  if (error || !posts) NotFound();
 
   return (
     <div className="pt-20">
@@ -38,7 +44,7 @@ export default function BlogPage() {
             >
               <span className="text-sm font-semibold text-primary-700">Blog</span>
               <span className="text-sm text-gray-500">•</span>
-              <span className="text-sm text-gray-700">{blogPosts.length} artículos</span>
+              <span className="text-sm text-gray-700">{posts?.length} artículos</span>
             </motion.div>
 
             <motion.h1
@@ -87,7 +93,7 @@ export default function BlogPage() {
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {blogPosts.map((post, index) => (
+            {posts?.map((post: any, index: number) => (
               <motion.div
                 key={post.id}
                 initial={{ opacity: 0, y: 26 }}
@@ -99,7 +105,7 @@ export default function BlogPage() {
                   <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                     <div className="relative h-56 overflow-hidden">
                       <Image
-                        src={post.image}
+                        src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${post.image.url}`}
                         alt={post.title}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -136,7 +142,7 @@ export default function BlogPage() {
                       <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                         <div className="flex items-center space-x-2 text-sm text-gray-600">
                           <User size={16} />
-                          <span>{post.author}</span>
+                          <span>{post.author.name}</span>
                         </div>
                         <div className="flex items-center text-primary-600 font-semibold group-hover:text-primary-700">
                           <span className="mr-1">Leer</span>

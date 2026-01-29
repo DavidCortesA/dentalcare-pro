@@ -5,8 +5,9 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { ArrowRight, Calendar, Phone, Sparkles, Smile, Activity, Star, Shield } from 'lucide-react';
-
-import { services } from '../lib/data';
+import { useServices } from '../lib/hooks/useStrapi';
+import LoadingPage from '../components/LoadingPage';
+import NotFound from '../not-found';
 
 const iconMap: { [key: string]: any } = {
   Sparkles,
@@ -18,6 +19,10 @@ const iconMap: { [key: string]: any } = {
 
 export default function ServiciosPage() {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.12 });
+  const { services, isLoading, error } = useServices();
+
+  if (isLoading) return <LoadingPage />;
+  if (error) NotFound();
 
   return (
     <div className="pt-20">
@@ -46,7 +51,7 @@ export default function ServiciosPage() {
             >
               <span className="text-sm font-semibold text-primary-700">Servicios</span>
               <span className="text-sm text-gray-500">•</span>
-              <span className="text-sm text-gray-700">{services.length} tratamientos</span>
+              <span className="text-sm text-gray-700">{services?.length} tratamientos</span>
             </motion.div>
 
             <motion.h1
@@ -117,7 +122,7 @@ export default function ServiciosPage() {
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service, index) => {
+            {services?.map((service: any, index: number) => {
               const Icon = iconMap[service.icon];
               return (
                 <motion.div
@@ -131,7 +136,7 @@ export default function ServiciosPage() {
                     <div className="relative h-full bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                       <div className="relative h-56 overflow-hidden">
                         <Image
-                          src={service.image}
+                          src={`${process.env.NEXT_PUBLIC_STRAPI_URL as string}${service.image.url}`}
                           alt={service.title}
                           fill
                           className="object-cover group-hover:scale-110 transition-transform duration-500"

@@ -41,18 +41,18 @@ export default function DoctorsSection({ doctors }: { doctors: any[] }) {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {doctors.map((doctor: any, index: number) => (
             <motion.div
-              key={doctor.id}
+              key={doctor.documentId}
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="group"
             >
-              <Link href={`/doctores/${doctor.id}`}>
+              <Link href={`/doctores/${doctor.slug}`}>
                 <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                   {/* Image */}
                   <div className="relative h-80 overflow-hidden">
                     <Image
-                      src={doctor?.image}
+                      src={`${process.env.NEXT_PUBLIC_STRAPI_URL as string}${doctor?.image.url}`}
                       alt={doctor?.name}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"

@@ -53,7 +53,7 @@ export default function BlogSection({ blogPosts }: { blogPosts: any[] }) {
                   {/* Image */}
                   <div className="relative h-56 overflow-hidden">
                     <Image
-                      src={post.image}
+                      src={`${process.env.NEXT_PUBLIC_STRAPI_URL as string}${post.image.url}`}
                       alt={post.title}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -92,7 +92,7 @@ export default function BlogSection({ blogPosts }: { blogPosts: any[] }) {
                     <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                       <div className="flex items-center space-x-2 text-sm text-gray-600">
                         <User size={16} />
-                        <span>{post.author}</span>
+                        <span>{post.author.name}</span>
                       </div>
                       <div className="flex items-center text-primary-600 font-semibold group-hover:text-primary-700">
                         <span className="mr-1">Leer más</span>

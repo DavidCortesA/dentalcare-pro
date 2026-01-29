@@ -68,7 +68,7 @@ export default function TestimonialsSection({ testimonials }: { testimonials: an
               <div className="flex items-center space-x-3">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden">
                   <Image
-                    src={testimonial.image}
+                    src={`${process.env.NEXT_PUBLIC_STRAPI_URL as string}${testimonial?.image?.url}` || "/avatar-default.png"}
                     alt={testimonial.name}
                     fill
                     className="object-cover"

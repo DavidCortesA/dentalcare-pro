@@ -1,15 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, HelpCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 import { faqItems } from '../lib/data';
+import { useFAQs } from '../lib/hooks/useStrapi';
+import NotFound from '../not-found';
+import LoadingPage from '../components/LoadingPage';
 
 export default function FAQPage() {
-  const [openId, setOpenId] = useState<number | null>(faqItems[0]?.id ?? null);
+  const [openId, setOpenId] = useState<number | null>(null);
+  const { faqs, error, isLoading } = useFAQs();
+  
+  useEffect(() => {
+    if(!isLoading) {
+      setOpenId(faqs[0].id)
+    }
+  }, [isLoading]);
+  
+  if (isLoading) return <LoadingPage />;
+  if (error) NotFound();
 
   return (
     <div className="pt-20">

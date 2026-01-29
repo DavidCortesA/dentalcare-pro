@@ -138,7 +138,7 @@ export default function Hero({ testimonials }: { testimonials: any[] }) {
                       className="w-10 h-10 rounded-full border-2 border-white bg-gray-300"
                     >
                       <Image
-                        src={testimonial?.image || "/avatar-default.png"}
+                        src={`${process.env.NEXT_PUBLIC_STRAPI_URL as string}${testimonial?.image?.url}` || "/avatar-default.png"}
                         alt={testimonial?.name || 'Testimonial'}
                         width={40}
                         height={40}
