@@ -119,9 +119,9 @@ export default function DoctoresPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {doctors?.map((doctor: any, index: number) => {
               const doctorImageUrl =
-                doctor?.photo?.url?.startsWith('http')
-                  ? doctor?.photo?.url
-                  : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${doctor?.photo?.url}`;
+                doctor?.image?.url?.startsWith('http')
+                  ? doctor?.image?.url
+                  : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${doctor?.image?.url}`;
 
               return (
                 <motion.div
