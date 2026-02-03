@@ -19,6 +19,11 @@ export default function DoctoresPage() {
   if (isLoading) (<LoadingPage />);
   if (error || !doctors) NotFound();
 
+  const imageUrl =
+    doctors?.image?.url?.startsWith('http')
+      ? doctors?.image?.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${doctors?.image?.url}`;
+
   return (
     <div className="pt-20">
       {/* Hero */}
@@ -130,7 +135,7 @@ export default function DoctoresPage() {
                     {/* Image */}
                     <div className="relative h-80 overflow-hidden">
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_STRAPI_URL as string}${doctor?.image?.url}`}
+                        src={imageUrl}
                         alt={doctor.name}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"

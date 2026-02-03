@@ -17,6 +17,11 @@ export default function BlogPage() {
   if (isLoading) return <LoadingPage />;
   if (error || !posts) NotFound();
 
+  const imageUrl =
+    posts?.image?.url?.startsWith('http')
+      ? posts?.image?.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${posts?.image?.url}`;
+
   return (
     <div className="pt-20">
       {/* Hero */}
@@ -105,7 +110,7 @@ export default function BlogPage() {
                   <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                     <div className="relative h-56 overflow-hidden">
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${post.image.url}`}
+                        src={imageUrl}
                         alt={post.title}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"

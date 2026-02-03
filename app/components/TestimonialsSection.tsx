@@ -11,6 +11,11 @@ export default function TestimonialsSection({ testimonials }: { testimonials: an
     threshold: 0.1,
   });
 
+  const imageUrl =
+    testimonials?.image?.url?.startsWith('http')
+      ? testimonials?.image?.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${testimonials?.image?.url}`;
+
   return (
     <section ref={ref} className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -63,12 +68,12 @@ export default function TestimonialsSection({ testimonials }: { testimonials: an
               <p className="text-gray-700 mb-6 leading-relaxed">
                 "{testimonial.comment}"
               </p>
-
+                
               {/* Author */}
               <div className="flex items-center space-x-3">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden">
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_STRAPI_URL as string}${testimonial?.image?.url}` || "/avatar-default.png"}
+                    src={imageUrl}
                     alt={testimonial.name}
                     fill
                     className="object-cover"

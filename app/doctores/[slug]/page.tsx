@@ -55,10 +55,6 @@ export default function DoctorPage({ params }: { params: Promise<{ slug: string 
     );
   }
 
-  console.log(doctor);
-  console.log(isLoading);
-  console.log(error);
-
   // Get attributes from Strapi format
   const attributes = doctor?.attributes || doctor;
   const name = attributes.name || '';
@@ -68,7 +64,9 @@ export default function DoctorPage({ params }: { params: Promise<{ slug: string 
   const credentials = attributes.credentials || [];
   const languages = attributes.languages || [];
   const schedule = attributes.schedule || {};
-  const imageUrl = process.env.NEXT_PUBLIC_STRAPI_URL + attributes?.image?.url || '';
+  const imageUrl = attributes.image?.url?.startsWith('http')
+    ? attributes.image.url
+    : `${process.env.NEXT_PUBLIC_STRAPI_URL}${attributes.image?.url}`;
 
   return (
     <div className="min-h-screen pt-20 bg-white">

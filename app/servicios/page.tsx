@@ -24,6 +24,11 @@ export default function ServiciosPage() {
   if (isLoading) return <LoadingPage />;
   if (error) NotFound();
 
+  const imageUrl =
+    services?.image?.url?.startsWith('http')
+      ? services?.image?.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${services?.image?.url}`;
+
   return (
     <div className="pt-20">
       {/* Hero */}
@@ -136,7 +141,7 @@ export default function ServiciosPage() {
                     <div className="relative h-full bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                       <div className="relative h-56 overflow-hidden">
                         <Image
-                          src={`${process.env.NEXT_PUBLIC_STRAPI_URL as string}${service.image.url}`}
+                          src={imageUrl}
                           alt={service.title}
                           fill
                           className="object-cover group-hover:scale-110 transition-transform duration-500"

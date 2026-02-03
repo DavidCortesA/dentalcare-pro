@@ -11,6 +11,11 @@ export default function DoctorsSection({ doctors }: { doctors: any[] }) {
     threshold: 0.1,
   });
 
+  const imageUrl =
+    doctors?.image?.url?.startsWith('http')
+      ? doctors?.image?.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${doctors?.image?.url}`;
+
   return (
     <section ref={ref} className="py-24 bg-linear-to-br from-gray-50 to-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,7 +57,7 @@ export default function DoctorsSection({ doctors }: { doctors: any[] }) {
                   {/* Image */}
                   <div className="relative h-80 overflow-hidden">
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_STRAPI_URL as string}${doctor?.image.url}`}
+                      src={imageUrl}
                       alt={doctor?.name}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"

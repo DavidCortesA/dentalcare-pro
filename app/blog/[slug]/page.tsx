@@ -10,7 +10,6 @@ import { use } from 'react';
 export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
   const { post, isLoading, error } = useBlogPost(slug);
-  console.log(post);
 
   // Loading State
   if (isLoading) {
@@ -57,7 +56,9 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
   const author = attributes.author?.data?.attributes?.name || attributes.author.name || 'DentalCare Pro';
   const category = attributes.category || '';
   const readTime = attributes.readTime || '5 min';
-  const imageUrl = process.env.NEXT_PUBLIC_STRAPI_URL + attributes.image.url || '';
+  const imageUrl = attributes.image?.url?.startsWith('http')
+    ? attributes.image.url
+    : `${process.env.NEXT_PUBLIC_STRAPI_URL}${attributes.image?.url}`;
 
   return (
     <div className="min-h-screen pt-20 bg-white">

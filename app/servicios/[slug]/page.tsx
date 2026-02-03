@@ -11,6 +11,11 @@ export default function ServicePage({ params }: { params: Promise<{ slug: string
   const { slug } = use(params)
   const { service, isLoading, error } = useService(slug);
 
+  const imageUrl =
+    service?.image?.url?.startsWith('http')
+      ? service?.image?.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${service?.image?.url}`;
+
   // Loading State
   if (isLoading) {
     return (
@@ -54,7 +59,6 @@ export default function ServicePage({ params }: { params: Promise<{ slug: string
   const benefits = attributes.benefits || [];
   const duration = attributes.duration || '';
   const price = attributes.price || '';
-  const imageUrl = process.env.NEXT_PUBLIC_STRAPI_URL + attributes.image.url || '';
 
   return (
     <div className="min-h-screen pt-20 bg-white">

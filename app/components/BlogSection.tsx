@@ -12,6 +12,11 @@ export default function BlogSection({ blogPosts }: { blogPosts: any[] }) {
     threshold: 0.1,
   });
 
+  const imageUrl =
+    blogPosts?.image?.url?.startsWith('http')
+      ? blogPosts?.image?.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${blogPosts?.image?.url}`;
+
   return (
     <section ref={ref} className="py-24 bg-linear-to-br from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -53,7 +58,7 @@ export default function BlogSection({ blogPosts }: { blogPosts: any[] }) {
                   {/* Image */}
                   <div className="relative h-56 overflow-hidden">
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_STRAPI_URL as string}${post.image.url}`}
+                      src={imageUrl}
                       alt={post.title}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"

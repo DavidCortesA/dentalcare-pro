@@ -13,6 +13,11 @@ export default function Hero({ testimonials }: { testimonials: any[] }) {
     { icon: Shield, value: '100%', label: 'Tratamientos Garantizados' },
   ];
 
+  const imageUrl =
+    testimonials?.image?.url?.startsWith('http')
+      ? testimonials?.image?.url
+      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${testimonials?.image?.url}`;
+
   return (
     <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-linear-to-br from-blue-50 via-white to-green-50">
       {/* Background Decoration */}
@@ -138,7 +143,7 @@ export default function Hero({ testimonials }: { testimonials: any[] }) {
                       className="w-10 h-10 rounded-full border-2 border-white bg-gray-300"
                     >
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_STRAPI_URL as string}${testimonial?.image?.url}` || "/avatar-default.png"}
+                        src={imageUrl}
                         alt={testimonial?.name || 'Testimonial'}
                         width={40}
                         height={40}
