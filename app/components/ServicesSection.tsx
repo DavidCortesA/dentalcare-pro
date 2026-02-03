@@ -14,16 +14,24 @@ const iconMap: { [key: string]: any } = {
   Shield,
 };
 
-export default function ServicesSection({ services }: { services: any[] }) {
+export interface Service {
+  id: number;
+  title: string;
+  description: string;
+  slug: string;
+  icon: string;
+  duration: string;
+  price: string;
+  image?: {
+    url: string;
+  };
+}
+
+export default function ServicesSection({ services }: { services: Service[] }) {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
-
-  const imageUrl =
-    services?.image?.url?.startsWith('http')
-      ? services?.image?.url
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${services?.image?.url}`;
 
   return (
     <section ref={ref} className="py-24 bg-white">
@@ -55,6 +63,12 @@ export default function ServicesSection({ services }: { services: any[] }) {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => {
             const Icon = iconMap[service.icon];
+            const imageUrl = service.image?.url
+              ? service.image.url.startsWith('http')
+                ? service.image.url
+                : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${service.image.url}`
+              : null;
+
             return (
               <motion.div
                 key={service.id}

@@ -11,11 +11,6 @@ export default function TestimonialsSection({ testimonials }: { testimonials: an
     threshold: 0.1,
   });
 
-  const imageUrl =
-    testimonials?.image?.url?.startsWith('http')
-      ? testimonials?.image?.url
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${testimonials?.image?.url}`;
-
   return (
     <section ref={ref} className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,48 +39,55 @@ export default function TestimonialsSection({ testimonials }: { testimonials: an
 
         {/* Testimonials Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={testimonial.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="relative bg-linear-to-br from-gray-50 to-white p-8 rounded-2xl border border-gray-200 hover:shadow-xl transition-all"
-            >
-              {/* Quote Icon */}
-              <div className="absolute top-6 right-6 text-primary-200">
-                <Quote size={32} fill="currentColor" />
-              </div>
+          {testimonials.map((testimonial, index) => {
+            const imageUrl =
+              testimonial?.image?.url?.startsWith('http')
+                ? testimonial?.image?.url
+                : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${testimonial?.image?.url}`;
 
-              {/* Stars */}
-              <div className="flex text-yellow-400 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} size={18} fill="currentColor" />
-                ))}
-              </div>
+            return (
+              <motion.div
+                key={testimonial.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="relative bg-linear-to-br from-gray-50 to-white p-8 rounded-2xl border border-gray-200 hover:shadow-xl transition-all"
+              >
+                {/* Quote Icon */}
+                <div className="absolute top-6 right-6 text-primary-200">
+                  <Quote size={32} fill="currentColor" />
+                </div>
 
-              {/* Comment */}
-              <p className="text-gray-700 mb-6 leading-relaxed">
-                "{testimonial.comment}"
-              </p>
-                
-              {/* Author */}
-              <div className="flex items-center space-x-3">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden">
-                  <Image
-                    src={imageUrl}
-                    alt={testimonial.name}
-                    fill
-                    className="object-cover"
-                  />
+                {/* Stars */}
+                <div className="flex text-yellow-400 mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} size={18} fill="currentColor" />
+                  ))}
                 </div>
-                <div>
-                  <div className="font-bold text-gray-900">{testimonial.name}</div>
-                  <div className="text-sm text-gray-600">{testimonial.treatment}</div>
+
+                {/* Comment */}
+                <p className="text-gray-700 mb-6 leading-relaxed">
+                  "{testimonial.comment}"
+                </p>
+                  
+                {/* Author */}
+                <div className="flex items-center space-x-3">
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden">
+                    <Image
+                      src={imageUrl}
+                      alt={testimonial.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div>
+                    <div className="font-bold text-gray-900">{testimonial.name}</div>
+                    <div className="text-sm text-gray-600">{testimonial.treatment}</div>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Overall Rating */}

@@ -13,11 +13,6 @@ export default function Hero({ testimonials }: { testimonials: any[] }) {
     { icon: Shield, value: '100%', label: 'Tratamientos Garantizados' },
   ];
 
-  const imageUrl =
-    testimonials?.image?.url?.startsWith('http')
-      ? testimonials?.image?.url
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${testimonials?.image?.url}`;
-
   return (
     <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-linear-to-br from-blue-50 via-white to-green-50">
       {/* Background Decoration */}
@@ -137,20 +132,26 @@ export default function Hero({ testimonials }: { testimonials: any[] }) {
             >
               <div className="flex items-center space-x-2">
                 <div className="flex -space-x-2">
-                  {testimonials?.map((testimonial, index) => (
-                    <div
-                      key={index}
-                      className="w-10 h-10 rounded-full border-2 border-white bg-gray-300"
-                    >
-                      <Image
-                        src={imageUrl}
-                        alt={testimonial?.name || 'Testimonial'}
-                        width={40}
-                        height={40}
-                        className="object-cover rounded-full"
-                      />
-                    </div>
-                  ))}
+                  {testimonials?.map((testimonial, index) => {
+                    const imageUrl = testimonial?.image?.url?.startsWith('http')
+                      ? testimonial?.image?.url
+                      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${testimonial?.image?.url}`;
+
+                    return (
+                      <div
+                        key={index}
+                        className="w-10 h-10 rounded-full border-2 border-white bg-gray-300"
+                      >
+                        <Image
+                          src={imageUrl}
+                          alt={testimonial?.name || 'Testimonial'}
+                          width={40}
+                          height={40}
+                          className="object-cover rounded-full"
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className="text-sm">
                   <div className="font-semibold text-gray-900">1,000+</div>
