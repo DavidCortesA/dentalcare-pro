@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getTestimonials } from '@/app/lib/strapi';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const testimonials = await getTestimonials();

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getBlogPost } from '@/app/lib/strapi';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
