@@ -92,7 +92,7 @@ export default function DoctorPage({ params }: { params: Promise<{ slug: string 
               className="lg:col-span-1"
             >
               <div className="relative aspect-square rounded-2xl overflow-hidden shadow-2xl">
-                {/* {imageUrl && (
+                {imageUrl && (
                   <Image
                     src={imageUrl}
                     alt={name}
@@ -100,7 +100,7 @@ export default function DoctorPage({ params }: { params: Promise<{ slug: string 
                     className="object-cover"
                     priority
                   />
-                )} */}
+                )}
               </div>
               
               {/* Experience Badge */}
@@ -201,7 +201,7 @@ export default function DoctorPage({ params }: { params: Promise<{ slug: string 
               Horario de Atención
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {Object.entries(schedule).map(([day, hours], index) => (
+              {Object.entries(schedule).map(([day, hours], index: number) => (
                 <motion.div
                   key={day}
                   initial={{ opacity: 0, y: 20 }}
@@ -212,8 +212,8 @@ export default function DoctorPage({ params }: { params: Promise<{ slug: string 
                   <div className="flex items-center space-x-3">
                     <Clock className="text-primary-600" size={20} />
                     <span className="font-semibold text-gray-900">{day}</span>
+                    <span className="text-gray-600 ml-auto">{hours as string}</span>
                   </div>
-                  <span className="text-gray-600">{hours}</span>
                 </motion.div>
               ))}
             </div>

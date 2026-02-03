@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, User, Phone, Mail, MessageSquare, CheckCircle } from 'lucide-react';
-import { doctors } from '../lib/data';
+import { useDoctors } from '../lib/hooks/useStrapi';
 
 interface AppointmentFormData {
   name: string;
@@ -20,6 +20,7 @@ interface AppointmentFormData {
 export default function AppointmentForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<AppointmentFormData>();
+  const { doctors, isLoading } = useDoctors();
 
   const onSubmit = async (data: AppointmentFormData) => {
     console.log('Appointment data:', data);
@@ -156,8 +157,15 @@ export default function AppointmentForm() {
             className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
           >
             <option value="">Cualquier doctor disponible</option>
-            {doctors.map((doctor) => (
-              <option key={doctor.id} value={doctor.documentId}>
+            {isLoading ? (
+              <option>Cargando doctores...</option>
+            ) : (
+              doctors?.length === 0 ? (
+                <option>No hay doctores disponibles</option>
+              ) : null
+            )}
+            {doctors?.map((doctor: any) => (
+              <option key={doctor.id} value={doctor.slug}>
                 {doctor.name}
               </option>
             ))}

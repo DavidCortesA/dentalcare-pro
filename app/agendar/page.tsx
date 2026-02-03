@@ -63,7 +63,7 @@ export default function AgendarPage() {
                 ¿Por qué agendar con nosotros?
               </h3>
               <div className="space-y-6">
-                {benefits.map((benefit, index) => {
+                {benefits?.map((benefit, index) => {
                   const Icon = benefit.icon;
                   return (
                     <div key={index} className="flex items-start space-x-4">
@@ -148,7 +148,7 @@ export default function AgendarPage() {
                 q: '¿Puedo reagendar mi cita?',
                 a: 'Por supuesto. Puedes reagendar con al menos 24 horas de anticipación llamando a nuestra clínica o enviando un mensaje.',
               },
-            ].map((faq, index) => (
+            ]?.map((faq, index) => (
               <div key={index} className="border-l-4 border-primary-500 pl-6">
                 <h3 className="font-bold text-gray-900 mb-2">{faq.q}</h3>
                 <p className="text-gray-600">{faq.a}</p>

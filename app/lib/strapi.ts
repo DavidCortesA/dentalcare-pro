@@ -75,9 +75,16 @@ export async function getDoctors() {
 }
 
 export async function getDoctor(slug: string) {
-  const data = await fetchAPI(`doctors?filters[slug][$eq]=${slug}?populate=*`, {
+  const endpoint = `doctors?filters[slug][$eq]=${slug}&populate=*`;
+  console.log('🔍 Fetching doctor from:', `${STRAPI_URL}/api/${endpoint}`);
+  const data = await fetchAPI(`doctors?filters[slug][$eq]=${slug}&populate=*`, {
     next: { revalidate: 3600 },
   });
+  
+  if (!data?.data || data.data.length === 0) {
+    return null;
+  }
+  
   return data.data[0];
 }
 

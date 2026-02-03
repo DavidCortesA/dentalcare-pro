@@ -11,6 +11,12 @@ const nextConfig = {
         hostname: 'localhost',
         port: '1337',
         pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'attractive-activity-9505ef4842.strapiapp.com',
+        port: '',
+        pathname: '/uploads/**'
       }
     ],
   },
