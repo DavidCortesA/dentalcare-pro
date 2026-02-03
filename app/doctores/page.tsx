@@ -19,11 +19,6 @@ export default function DoctoresPage() {
   if (isLoading) (<LoadingPage />);
   if (error || !doctors) NotFound();
 
-  const imageUrl =
-    doctors?.image?.url?.startsWith('http')
-      ? doctors?.image?.url
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${doctors?.image?.url}`;
-
   return (
     <div className="pt-20">
       {/* Hero */}
@@ -122,68 +117,75 @@ export default function DoctoresPage() {
           </motion.div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {doctors?.map((doctor: any, index: number) => (
-              <motion.div
-                key={doctor.id}
-                initial={{ opacity: 0, y: 26 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: index * 0.08 }}
-                className="group"
-              >
-                <Link href={`/doctores/${doctor.slug}`}>
-                  <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                    {/* Image */}
-                    <div className="relative h-80 overflow-hidden">
-                      <Image
-                        src={imageUrl}
-                        alt={doctor.name}
-                        fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
+            {doctors?.map((doctor: any, index: number) => {
+              const doctorImageUrl =
+                doctor?.photo?.url?.startsWith('http')
+                  ? doctor?.photo?.url
+                  : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${doctor?.photo?.url}`;
 
-                      {/* Experience Badge */}
-                      <div className="absolute top-4 right-4 px-3 py-2 bg-white rounded-lg shadow-lg">
-                        <div className="text-xs text-gray-600">Experiencia</div>
-                        <div className="text-lg font-bold text-primary-600">{doctor.experience}</div>
-                      </div>
+              return (
+                <motion.div
+                  key={doctor.id}
+                  initial={{ opacity: 0, y: 26 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: index * 0.08 }}
+                  className="group"
+                >
+                  <Link href={`/doctores/${doctor.slug}`}>
+                    <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                      {/* Image */}
+                      <div className="relative h-80 overflow-hidden">
+                        <Image
+                          src={doctorImageUrl}
+                          alt={doctor.name}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
 
-                      {/* Name */}
-                      <div className="absolute bottom-0 left-0 right-0 p-6">
-                        <h3 className="text-2xl font-display font-bold text-white mb-1">
-                          {doctor.name}
-                        </h3>
-                        <p className="text-primary-200 font-medium">{doctor.specialty}</p>
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-6 space-y-4">
-                      <p className="text-gray-600 text-sm line-clamp-3">{doctor.bio}</p>
-
-                      <div className="space-y-2">
-                        <div className="flex items-center text-sm text-gray-600">
-                          <GraduationCap size={16} className="mr-2 text-primary-600" />
-                          <span>{doctor.credentials[0]}</span>
+                        {/* Experience Badge */}
+                        <div className="absolute top-4 right-4 px-3 py-2 bg-white rounded-lg shadow-lg">
+                          <div className="text-xs text-gray-600">Experiencia</div>
+                          <div className="text-lg font-bold text-primary-600">{doctor.experience}</div>
                         </div>
-                        <div className="flex items-center text-sm text-gray-600">
-                          <Languages size={16} className="mr-2 text-primary-600" />
-                          <span>{doctor.languages.join(', ')}</span>
+
+                        {/* Name */}
+                        <div className="absolute bottom-0 left-0 right-0 p-6">
+                          <h3 className="text-2xl font-display font-bold text-white mb-1">
+                            {doctor.name}
+                          </h3>
+                          <p className="text-primary-200 font-medium">{doctor.specialty}</p>
                         </div>
                       </div>
 
-                      <div className="w-full px-4 py-3 bg-linear-to-r from-primary-600 to-dental-mint text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center space-x-2">
-                        <Calendar size={18} />
-                        <span>Ver perfil</span>
-                      </div>
-                    </div>
+                      {/* Content */}
+                      <div className="p-6 space-y-4">
+                        <p className="text-gray-600 text-sm line-clamp-3">{doctor.bio}</p>
 
-                    {/* Hover Border */}
-                    <div className="absolute inset-0 border-2 border-primary-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+                        <div className="space-y-2">
+                          <div className="flex items-center text-sm text-gray-600">
+                            <GraduationCap size={16} className="mr-2 text-primary-600" />
+                            <span>{doctor.credentials[0]}</span>
+                          </div>
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Languages size={16} className="mr-2 text-primary-600" />
+                            <span>{doctor.languages.join(', ')}</span>
+                          </div>
+                        </div>
+
+                        <div className="w-full px-4 py-3 bg-linear-to-r from-primary-600 to-dental-mint text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center space-x-2">
+                          <Calendar size={18} />
+                          <span>Ver perfil</span>
+                        </div>
+                      </div>
+
+                      {/* Hover Border */}
+                      <div className="absolute inset-0 border-2 border-primary-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                    </div>
+                  </Link>
+                </motion.div>
+              )
+            })}
           </div>
         </div>
       </section>

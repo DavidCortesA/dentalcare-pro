@@ -24,11 +24,6 @@ export default function ServiciosPage() {
   if (isLoading) return <LoadingPage />;
   if (error) NotFound();
 
-  const imageUrl =
-    services?.image?.url?.startsWith('http')
-      ? services?.image?.url
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${services?.image?.url}`;
-
   return (
     <div className="pt-20">
       {/* Hero */}
@@ -129,6 +124,10 @@ export default function ServiciosPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services?.map((service: any, index: number) => {
               const Icon = iconMap[service.icon];
+              const imageUrl =
+                service.image?.url?.startsWith('http')
+                  ? service.image?.url
+                  : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${service.image?.url}`;
               return (
                 <motion.div
                   key={service.id}

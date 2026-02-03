@@ -17,11 +17,6 @@ export default function BlogPage() {
   if (isLoading) return <LoadingPage />;
   if (error || !posts) NotFound();
 
-  const imageUrl =
-    posts?.image?.url?.startsWith('http')
-      ? posts?.image?.url
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${posts?.image?.url}`;
-
   return (
     <div className="pt-20">
       {/* Hero */}
@@ -98,70 +93,77 @@ export default function BlogPage() {
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {posts?.map((post: any, index: number) => (
-              <motion.div
-                key={post.id}
-                initial={{ opacity: 0, y: 26 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: index * 0.08 }}
-                className="group"
-              >
-                <Link href={`/blog/${post.slug}`}>
-                  <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                    <div className="relative h-56 overflow-hidden">
-                      <Image
-                        src={imageUrl}
-                        alt={post.title}
-                        fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute top-4 left-4 px-3 py-1 bg-white/95 backdrop-blur-sm rounded-full text-sm font-semibold text-primary-700">
-                        {post.category}
-                      </div>
-                    </div>
+            {posts?.map((post: any, index: number) => {
+              const postImageUrl =
+                post.image?.url?.startsWith('http')
+                  ? post.image?.url
+                  : `${process.env.NEXT_PUBLIC_STRAPI_URL as string}${post.image?.url}`;
 
-                    <div className="p-6">
-                      <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
-                        <span className="flex items-center space-x-1">
-                          <Calendar size={14} />
-                          <span>
-                            {new Date(post.date).toLocaleDateString('es-MX', {
-                              day: 'numeric',
-                              month: 'short',
-                              year: 'numeric',
-                            })}
+              return (
+                <motion.div
+                  key={post.id}
+                  initial={{ opacity: 0, y: 26 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: index * 0.08 }}
+                  className="group"
+                >
+                  <Link href={`/blog/${post.slug}`}>
+                    <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                      <div className="relative h-56 overflow-hidden">
+                        <Image
+                          src={postImageUrl}
+                          alt={post.title}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute top-4 left-4 px-3 py-1 bg-white/95 backdrop-blur-sm rounded-full text-sm font-semibold text-primary-700">
+                          {post.category}
+                        </div>
+                      </div>
+
+                      <div className="p-6">
+                        <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                          <span className="flex items-center space-x-1">
+                            <Calendar size={14} />
+                            <span>
+                              {new Date(post.date).toLocaleDateString('es-MX', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric',
+                              })}
+                            </span>
                           </span>
-                        </span>
-                        <span className="flex items-center space-x-1">
-                          <Clock size={14} />
-                          <span>{post.readTime}</span>
-                        </span>
-                      </div>
-
-                      <h3 className="text-xl font-display font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
-                        {post.title}
-                      </h3>
-
-                      <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
-
-                      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <div className="flex items-center space-x-2 text-sm text-gray-600">
-                          <User size={16} />
-                          <span>{post.author.name}</span>
+                          <span className="flex items-center space-x-1">
+                            <Clock size={14} />
+                            <span>{post.readTime}</span>
+                          </span>
                         </div>
-                        <div className="flex items-center text-primary-600 font-semibold group-hover:text-primary-700">
-                          <span className="mr-1">Leer</span>
-                          <ArrowRight
-                            size={16}
-                            className="group-hover:translate-x-2 transition-transform"
-                          />
+
+                        <h3 className="text-xl font-display font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
+                          {post.title}
+                        </h3>
+
+                        <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
+
+                        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                          <div className="flex items-center space-x-2 text-sm text-gray-600">
+                            <User size={16} />
+                            <span>{post.author.name}</span>
+                          </div>
+                          <div className="flex items-center text-primary-600 font-semibold group-hover:text-primary-700">
+                            <span className="mr-1">Leer</span>
+                            <ArrowRight
+                              size={16}
+                              className="group-hover:translate-x-2 transition-transform"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+                  </Link>
+                </motion.div>
+              )
+            })}
           </div>
         </div>
       </section>
