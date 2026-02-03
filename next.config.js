@@ -14,10 +14,10 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'attractive-activity-9505ef4842.strapiapp.com',
-      }
+        hostname: '*.media.strapiapp.com',
+      },
     ],
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
